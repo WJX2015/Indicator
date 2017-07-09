@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffffff"
     android:orientation="vertical"
     tools:context="com.example.lenovo_g50_70.indicator.MainActivity">
 
