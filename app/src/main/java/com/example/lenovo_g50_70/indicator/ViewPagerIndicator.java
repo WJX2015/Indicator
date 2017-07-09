@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
+import static android.R.attr.x;
+
 /**
  * Created by wjx on 2017/7/8.
  */
@@ -110,6 +112,16 @@ public class ViewPagerIndicator extends LinearLayout {
         int tabWidth = getWidth() / mTabVisibleCount;
         //指示器滑动的距离
         mTranslationX = (int) (tabWidth * (positionOffset + position));
+
+        //容器移动，在tab处于移动至最后一个时
+        if (position >= (mTabVisibleCount - 2) && positionOffset > 0 && getChildCount() > mTabVisibleCount) {
+            if (mTabVisibleCount != 1) {
+                this.scrollTo((position - (mTabVisibleCount - 2)) * tabWidth + (int) (tabWidth * positionOffset), 0);
+            } else {
+                this.scrollTo(position * tabWidth + (int) (tabWidth * positionOffset), 0);
+            }
+
+        }
 
         //重绘
         invalidate();
