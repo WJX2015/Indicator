@@ -31,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
         initViews();
         initDatas();
 
+        //动态添加tab
+        //mIndicator.setVisibleTabCount(3);
+        //mIndicator.setTabItem(mTitles);
+
         mViewPager.setAdapter(mAdapter);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

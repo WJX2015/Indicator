@@ -10,11 +10,15 @@ import android.graphics.Path;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import static android.R.attr.x;
+import java.util.List;
 
 /**
  * Created by wjx on 2017/7/8.
@@ -35,6 +39,9 @@ public class ViewPagerIndicator extends LinearLayout {
 
     private int mTabVisibleCount;
     private static final int COUNT_DEFAULT_TAB = 4;
+
+    private List<String> mTitles;
+    private static final int COLOR_TEXT_NORMAL = 0x77FFFFFF;
 
     public ViewPagerIndicator(Context context) {
         this(context, null);
@@ -154,5 +161,42 @@ public class ViewPagerIndicator extends LinearLayout {
         DisplayMetrics outMetrics = new DisplayMetrics();
         wm.getDefaultDisplay().getMetrics(outMetrics);
         return outMetrics.widthPixels;
+    }
+
+    public void setTabItem(List<String> titles) {
+        if (titles != null && titles.size() > 0) {
+            this.removeAllViews();
+            mTitles = titles;
+            for (String title : mTitles) {
+                addView(generateTextView(title));
+            }
+        }
+    }
+
+    /**
+     * 设置可见tab的数量
+     *
+     * @param count
+     */
+    public void setVisibleTabCount(int count) {
+        mTabVisibleCount = count;
+    }
+
+    /**
+     * 根据title创建tab
+     *
+     * @param title
+     * @return
+     */
+    private View generateTextView(String title) {
+        TextView tv = new TextView(getContext());
+        LinearLayout.LayoutParams Lp = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        Lp.width = getScreenWidth() / mTabVisibleCount;
+        tv.setText(title);
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        tv.setTextColor(COLOR_TEXT_NORMAL);
+        tv.setLayoutParams(Lp);
+        return tv;
     }
 }
