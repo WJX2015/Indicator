@@ -8,6 +8,7 @@ import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -42,6 +43,8 @@ public class ViewPagerIndicator extends LinearLayout {
 
     private List<String> mTitles;
     private static final int COLOR_TEXT_NORMAL = 0x77FFFFFF;
+
+    private ViewPager mViewPager;
 
     public ViewPagerIndicator(Context context) {
         this(context, null);
@@ -198,5 +201,61 @@ public class ViewPagerIndicator extends LinearLayout {
         tv.setTextColor(COLOR_TEXT_NORMAL);
         tv.setLayoutParams(Lp);
         return tv;
+    }
+
+    /**
+     * 设置关联的ViewPager
+     *
+     * @param vp
+     * @param
+     */
+    public void setViewPager(ViewPager vp, int pos) {
+        mViewPager = vp;
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                //tabWidth*positionOffset+position*tabWidth
+                scroll(position, positionOffset);
+
+                if (mListener != null) {
+                    mListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (mListener != null) {
+                    mListener.onPageSelected(position);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if (mListener != null) {
+                    mListener.onPageScrollStateChanged(state);
+                }
+            }
+        });
+
+        mViewPager.setCurrentItem(pos);
+    }
+
+    public PageOnchangeListener mListener;
+
+    /**
+     * 设置页面滑动监听
+     *
+     * @param listener
+     */
+    public void setOnPageChangeListener(PageOnchangeListener listener) {
+        mListener = listener;
+    }
+
+    public interface PageOnchangeListener {
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
+
+        public void onPageSelected(int position);
+
+        public void onPageScrollStateChanged(int state);
     }
 }

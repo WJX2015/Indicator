@@ -36,23 +36,7 @@ public class MainActivity extends AppCompatActivity {
         //mIndicator.setTabItem(mTitles);
 
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //tabWidth*positionOffset+position*tabWidth
-                mIndicator.scroll(position, positionOffset);
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
+        mIndicator.setViewPager(mViewPager, 0);
     }
 
     /**
