@@ -34,6 +34,7 @@ public class ViewPagerIndicator extends LinearLayout {
     private int mTriangleHeight;
 
     private static final float RADIO_TRIANGLE_WIDTH = 1 / 6F;
+    private final int DIMENSION_TRIANGLE_WIDTH_MAX = (int) (getScreenWidth() / 3 * RADIO_TRIANGLE_WIDTH);
 
     private int mInitTranslationX;  //三角形初始时的偏移量
     private int mTranslationX;//手指滑动平移的距离
@@ -43,6 +44,7 @@ public class ViewPagerIndicator extends LinearLayout {
 
     private List<String> mTitles;
     private static final int COLOR_TEXT_NORMAL = 0x77FFFFFF;
+    private static final int COLOR_TEXT_HIGH_LIGHT = 0xFFFFFFFF;
 
     private ViewPager mViewPager;
 
@@ -93,6 +95,7 @@ public class ViewPagerIndicator extends LinearLayout {
         super.onSizeChanged(w, h, oldw, oldh);
 
         mTriangleWidth = (int) (w / mTabVisibleCount * RADIO_TRIANGLE_WIDTH);
+        mTriangleWidth = Math.min(mTriangleWidth, DIMENSION_TRIANGLE_WIDTH_MAX);
         mInitTranslationX = w / mTabVisibleCount / 2 - mTriangleWidth / 2;
 
         initTriangle();
@@ -152,6 +155,9 @@ public class ViewPagerIndicator extends LinearLayout {
             Lp.width = getScreenWidth() / mTabVisibleCount;
             view.setLayoutParams(Lp);
         }
+
+        //设置tab点击事件
+        setItemClick();
     }
 
     /**
@@ -166,6 +172,11 @@ public class ViewPagerIndicator extends LinearLayout {
         return outMetrics.widthPixels;
     }
 
+    /**
+     * 在代码里动态添加tab
+     *
+     * @param titles
+     */
     public void setTabItem(List<String> titles) {
         if (titles != null && titles.size() > 0) {
             this.removeAllViews();
@@ -173,6 +184,8 @@ public class ViewPagerIndicator extends LinearLayout {
             for (String title : mTitles) {
                 addView(generateTextView(title));
             }
+            //设置tab点击事件
+            setItemClick();
         }
     }
 
@@ -227,6 +240,7 @@ public class ViewPagerIndicator extends LinearLayout {
                 if (mListener != null) {
                     mListener.onPageSelected(position);
                 }
+                highLightTextView(position);
             }
 
             @Override
@@ -238,6 +252,7 @@ public class ViewPagerIndicator extends LinearLayout {
         });
 
         mViewPager.setCurrentItem(pos);
+        highLightTextView(pos);
     }
 
     public PageOnchangeListener mListener;
@@ -257,5 +272,48 @@ public class ViewPagerIndicator extends LinearLayout {
         public void onPageSelected(int position);
 
         public void onPageScrollStateChanged(int state);
+    }
+
+    /**
+     * 选中tab文本高亮
+     *
+     * @param pos
+     */
+    private void highLightTextView(int pos) {
+        resetTextViewColor();
+        View view = getChildAt(pos);
+        if (view instanceof TextView) {
+            ((TextView) view).setTextColor(COLOR_TEXT_HIGH_LIGHT);
+        }
+    }
+
+    /**
+     * 重置tab文本颜色
+     */
+    public void resetTextViewColor() {
+        for (int i = 0; i < getChildCount(); i++) {
+            View view = getChildAt(i);
+            if (view instanceof TextView) {
+                ((TextView) view).setTextColor(COLOR_TEXT_NORMAL);
+            }
+        }
+    }
+
+    /**
+     * 设置TabItem点击事件,与ViewPager联动
+     */
+    private void setItemClick() {
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            final int j = i;
+
+            View view = getChildAt(i);
+            view.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mViewPager.setCurrentItem(j);
+                }
+            });
+        }
     }
 }
