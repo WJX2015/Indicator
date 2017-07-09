@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private ViewPagerIndicator mIndicator;
 
-    private List<String> mTitles = Arrays.asList("短信", "收藏", "推荐");
+    private List<String> mTitles = Arrays.asList("短信1", "收藏2", "推荐3", "短信4", "收藏5", "推荐6", "短信7", "收藏8", "推荐9");
     private List<VpSimpleFragment> mFragments = new ArrayList<>();
     private FragmentPagerAdapter mAdapter;
 
